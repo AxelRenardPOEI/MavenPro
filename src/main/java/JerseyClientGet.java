@@ -1,11 +1,12 @@
-
-
 import com.sun.jersey.api.client.Client;
 import com.sun.jersey.api.client.ClientResponse;
 import com.sun.jersey.api.client.WebResource;
 import java.util.Scanner;
 import org.json.*;
 import com.fasterxml.jackson.*;
+import com.fasterxml.jackson.databind.*;
+import com.fasterxml.jackson.databind.DeserializationFeature;
+
 
 public class JerseyClientGet {
 	
@@ -68,7 +69,7 @@ public class JerseyClientGet {
 		Client client = Client.create();
 
 		WebResource webResource = client
-		   .resource("https://api-adresse.data.gouv.fr/search/?q=" + an6.AdresseAffiche() + "&limit=5"); // Envoi de la requête avec utilisation de l'objet + 
+		   .resource("https://api-adresse.data.gouv.fr/search/?q=" + an6.AdresseAffiche() + "&limit=1"); // Envoi de la requête avec utilisation de l'objet + 
 																										// utilisation de la méthode pour mettre l'adresse sur une ligne +
 																										// délimitation du nombre de résultat max
 
@@ -87,11 +88,19 @@ public class JerseyClientGet {
 		
 		JSONObject AdresseCori = new JSONObject(output); // On instance l'objet
 		
-		System.out.println(AdresseCori); //Affichage du Json
+		System.out.println(AdresseCori); //Affichage du JsonS
 //		System.out.println(AdresseCori.get("type").toString());
 		
+//		ObjectMapper objectMapper = new ObjectMapper();
+//		AdresseCor ac1 = objectMapper.readValue(AdresseCori, AdresseCor.class);
 		
-		AdresseCor ac1 = objectMapper.readValue(AdresseCori, AdresseCor.class);
+		ObjectMapper objectMapper = new ObjectMapper();
+		objectMapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+		
+
+		Properties ac1 = objectMapper.readValue(AdresseCori.toString(), Properties.class);
+		System.out.println(ac1.AdresseAffiche2());
+		
 		
 		
 // 		System.out.println(getKeys("features"));
